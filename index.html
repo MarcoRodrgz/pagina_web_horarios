@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Consulta</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <base href="/">
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Agregamos estilos de Bootstrap -->
+    <style>
+        body {
+            background-image: url('https://static.vecteezy.com/system/resources/previews/019/947/025/non_2x/dark-blue-abstract-polygonal-texture-abstract-geometric-background-triangle-pattern-elegant-bright-polygonal-illustration-with-gradient-textured-pattern-for-background-geometric-background-free-photo.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+        }
+
+        form {
+            max-width: 500px;
+            margin: auto;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            color: white;
+        }
+
+        select,
+        input {
+            width: 100%;
+            margin-top: 5px;
+            padding: 8px;
+        }
+
+        button {
+            background-color: hwb(172 4% 11%); /*  */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #materiasContainer {
+            margin-top: 10px;
+        }
+
+        #materiasContainer div {
+            background-color: hsl(295, 27%, 84%); /* Morao */
+            color: hsla(0, 64%, 49%, 0.773);
+            padding: 5px 10px;
+            margin-top: 5px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+    </style>
+
+    <script>
+        // Función para mostrar u ocultar opciones de materias según el semestre seleccionado
+        function mostrarMaterias() {
+            const semestreSeleccionado = document.getElementById('semestre').value;
+            const materiasSelect = document.getElementById('materias');
+            const numMaterias = document.getElementById('numMaterias').value;
+            
+
+            // Define las opciones de materias para cada semestre
+            const opcionesMaterias = {
+                '2': ['Algebra lineal', 'Algoritmo y estructura de datos', 'Calculo aplicado', 'Mecanica y electromagnetismo', 'Ingenieria etica y sociedad','Fundamentos Economicos', 'Fundamentos de diseño digital','Base de datos'],
+                '3': ['Algebra lineal', 'Algoritmo y estructura de datos', 'Calculo aplicado', 'Mecanica y electromagnetismo', 'Ingenieria etica y sociedad','Fundamentos Economicos', 'Fundamentos de diseño digital','Base de datos','Analisis y diseño de algoritmos','Paradigmas de programacion','Fundamentos de diseño digital','Circuitos electricos','Finanzas empresariales','Probabilidad y estadistica','Sistemas operativos','Teoria de la computacion'],
+                '4': ['Algebra lineal', 'Algoritmo y estructura de datos', 'Calculo aplicado', 'Mecanica y electromagnetismo', 'Ingenieria etica y sociedad','Fundamentos Economicos', 'Fundamentos de diseño digital','Base de datos','Analisis y diseño de algoritmos','Paradigmas de programacion','Fundamentos de diseño digital','Circuitos electricos','Finanzas empresariales','Probabilidad y estadistica','Sistemas operativos','Teoria de la computacion','Matematicas avanzadas para la ingenieria', 'Electronica analogica', 'Tecnologias para desarrollo de aplicacion web', 'Diseño de sistemas digitales','Analisis y diseño de sistemas','Formulacion y evaluacion de proyectos informaticos' ],
+                '5': ['Fundamentos de diseño digital','Base de datos','Analisis y diseño de algoritmos','Paradigmas de programacion','Fundamentos de diseño digital','Circuitos electricos','Finanzas empresariales','Probabilidad y estadistica','Sistemas operativos','Teoria de la computacion','Matematicas avanzadas para la ingenieria', 'Electronica analogica', 'Tecnologias para desarrollo de aplicacion web', 'Diseño de sistemas digitales','Analisis y diseño de sistemas','Formulacion y evaluacion de proyectos informaticos', 'Compiladores','Procesamiento digital de señales','Arquitectura de computadoras','Instrumentacion y control','Redes de computadoras']
+
+            };
+
+            // Elimina las opciones actuales
+            materiasSelect.innerHTML = '';
+
+            if (numMaterias >= 4 && numMaterias <= 7) {
+               // Agrega las nuevas opciones según el semestre seleccionado
+                opcionesMaterias[semestreSeleccionado].forEach(materia => {
+                    const option = document.createElement('option');
+                    option.value = materia;
+                    option.text = materia;
+                    materiasSelect.add(option);
+                });
+            } else {
+                alert('Número de materias no válido. Debe estar entre 4 y 7.');
+            }
+
+            
+        }
+
+
+        function agregarMateria() {
+            const materiaSelect = document.getElementById('materias');
+            const materiasContainer = document.getElementById('materiasContainer');
+            const materiasInput = document.getElementById('materiasHidden');
+
+            const materiaSeleccionada = materiaSelect.value;
+
+            if (materiaSeleccionada) {
+                const materiaElement = document.createElement('div');
+                materiaElement.textContent = materiaSeleccionada;
+
+                const botonEliminar = document.createElement('button');
+                botonEliminar.textContent = 'Eliminar';
+                botonEliminar.onclick = function() {
+                    materiasContainer.removeChild(materiaElement);
+                    // Elimina la materia del input
+                    const materias = materiasInput.value.split(',');
+                    const index = materias.indexOf(materiaSeleccionada);
+                    if (index !== -1) {
+                        materias.splice(index, 1);
+                        materiasInput.value = materias.join(',');
+                    }
+                };
+
+                materiaElement.appendChild(botonEliminar);
+                materiasContainer.appendChild(materiaElement);
+
+                // Agrega la materia al input
+                materiasInput.value += (materiasInput.value ? ',' : '') + materiaSeleccionada;
+            } else {
+                alert('Selecciona una materia antes de agregar.');
+            }
+        }
+
+         function validarNumeroMaterias() {
+
+            const numMaterias = document.getElementById('numMaterias').value;
+            const materiasContainer = document.getElementById('materiasContainer');
+            const materiasSeleccionadas = new Set();
+
+            // Obtén el número real de materias seleccionadas
+            const numMateriasSeleccionadas = materiasContainer.children.length;
+
+            // Verifica si el número de materias seleccionadas está en el rango permitido
+            if (numMateriasSeleccionadas != numMaterias) {
+                alert('El número de materias seleccionadas no coincide con el número ingresado.');
+                return false; // Evita enviar el formulario
+            }
+
+            // Verifica que no haya materias repetidas
+            for (let i = 0; i < materiasContainer.children.length; i++) {
+                const materia = materiasContainer.children[i].textContent;
+                if (materiasSeleccionadas.has(materia)) {
+                    alert('No se permiten materias repetidas.');
+                    return false; // Evita enviar el formulario
+                }
+                materiasSeleccionadas.add(materia);
+            }
+
+            return true; // Permite enviar el formulario
+        }
+    </script>
+</head>
+<body>
+    <h1>Genera tu horario</h1>
+    <form action="/consultar" method="post" onsubmit="return validarNumeroMaterias()">
+        <label for="numMaterias">Número de Materias:</label>
+        <input type="number" id="numMaterias" name="numMaterias" min="4" max="7" required>
+        <br>
+        <label for="semestre">Semestre:</label>
+        <select id="semestre" name="semestre" onchange="mostrarMaterias()" required>
+            <option value="2">Segundo</option>
+            <option value="3">Tercero</option>
+            <option value="4">Cuarto</option>
+            <option value="5">Quinto</option>
+        </select>
+        <br>
+        <label for="materias">Materias:</label>
+        <select id="materias" name="materia" required>
+            <!-- Opciones de materias se agregarán dinámicamente con JavaScript -->
+        </select>
+        <br>
+        <button type="button" onclick="agregarMateria()">Agregar</button>
+        <div id="materiasContainer" name="materiasContainer">
+            <!-- Materias seleccionadas se mostrarán aquí -->
+        </div>
+        <input hidden id="materiasHidden" name="materiasHidden" style="width: 300px;">
+        <br>
+        <br>
+        <br>
+        <button type="submit">Generar</button>
+    </form>
+</body>
+</html>
